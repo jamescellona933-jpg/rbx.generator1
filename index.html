@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Roblox Username Generator</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background-color: black;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding-top: 50px;
+    color: white;
+  }
+
+  #starCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+
+  .container {
+    background: rgba(0,0,0,0.8);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,255,255,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    width: 80%;
+  }
+
+  h1 {
+    color: #00ffff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+  }
+
+  input[type="text"] {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.2em;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  button {
+    background-color: #00ffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-bottom: 20px;
+  }
+
+  button:hover {
+    background-color: #00bbbb;
+  }
+
+  #progressContainer {
+    width: 100%;
+    background-color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  #progressBar {
+    height: 20px;
+    width: 0%;
+    background-color: #00ffff;
+    transition: width 0.1s;
+  }
+
+  #finalMessage {
+    display: none;
+    text-align: center;
+  }
+
+  #finalMessage p {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+  }
+
+  #arrow {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+
+  #joinBtn {
+    background-color: #00ffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+  }
+
+  #joinBtn:hover {
+    background-color: #00bbbb;
+  }
+
+  #avatarDisplay {
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  #avatarDisplay img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #00ffff;
+    box-shadow: 0 0 15px #00ffff;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="starCanvas"></canvas>
+
+<div class="container">
+  <h1>Roblox Username Generator</h1>
+  <input type="text" id="usernameInput" placeholder="Enter your Roblox username" />
+  <button id="generateBtn">Generate</button>
+
+  <div id="progressContainer">
+    <div id="progressBar"></div>
+  </div>
+
+  <div id="finalMessage">
+    <p>TO GET YOUR ROBUX JOIN THIS GROUP</p>
+    <div id="arrow">⬇️</div>
+    <a id="joinBtn" href="https://www.robiox.com.am/communities/4068228252/Vinnys-Garage" target="_blank">PRESS HERE TO JOIN GROUP</a>
+  </div>
+
+  <div id="avatarDisplay" style="display:none;">
+    <p>Your Roblox Avatar:</p>
+    <img id="avatarImage" src="" alt="Roblox Avatar" />
+  </div>
+
+  <div id="message"></div>
+</div>
+
+<script>
+  // Animate stars
+  const canvas = document.getElementById('starCanvas');
+  const ctx = canvas.getContext('2d');
+
+  let stars = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  for(let i=0; i<150; i++) {
+    stars.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      radius: Math.random() * 1.5 + 0.2,
+      dx: (Math.random() - 0.5) * 0.3,
+      dy: (Math.random() - 0.5) * 0.3,
+      alpha: Math.random(),
+    });
+  }
+
+  function animate() {
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    stars.forEach(star => {
+      star.x += star.dx;
+      star.y += star.dy;
+      if (star.x < 0 || star.x > window.innerWidth) star.dx *= -1;
+      if (star.y < 0 || star.y > window.innerHeight) star.dy *= -1;
+      ctx.globalAlpha = star.alpha;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  const generateBtn = document.getElementById('generateBtn');
+  const progressContainer = document.getElementById('progressContainer');
+  const progressBar = document.getElementById('progressBar');
+  const finalMessage = document.getElementById('finalMessage');
+  const avatarDisplay = document.getElementById('avatarDisplay');
+  const avatarImage = document.getElementById('avatarImage');
+  const messageDiv = document.getElementById('message');
+
+  document.getElementById('generateBtn').addEventListener('click', () => {
+    const username = document.getElementById('usernameInput').value.trim();
+    console.log('Generate clicked with username:', username); // debug
+    if (!username) {
+      alert("Please enter a username!");
+      return;
+    }
+
+    // Reset UI
+    finalMessage.style.display = 'none';
+    avatarDisplay.style.display = 'none';
+    messageDiv.textContent = '';
+
+    // Show progress bar
+    progressContainer.style.display = 'block';
+    progressBar.style.width = '0%';
+
+    let progress = 0;
+    const intervalTime = 50;
+
+    const progressInterval = setInterval(() => {
+      progress++;
+      progressBar.style.width = progress + '%';
+
+      if (progress >= 100) {
+        clearInterval(progressInterval);
+        // Show final message
+        progressContainer.style.display = 'none';
+        finalMessage.style.display = 'block';
+
+        // Generate placeholder avatar
+        const placeholderUrl = "https://via.placeholder.com/150?text=" + encodeURIComponent(username);
+        avatarImage.src = placeholderUrl;
+        avatarDisplay.style.display = 'block';
+
+        messageDiv.textContent = "Your Roblox avatar for '" + username + "'";
+        console.log('Progress complete, avatar shown'); // debug
+      }
+    }, intervalTime);
+  });
+</script>
+
+</body>
+</html>
